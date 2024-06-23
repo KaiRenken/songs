@@ -9,4 +9,8 @@ class SongDbRepositoryImpl : SongRepository {
     override fun store(song: Song) {
         TODO("Not yet implemented")
     }
+
+    override fun exists(name: Song.Name, artist: Song.Artist): Boolean {
+        TODO("Not yet implemented")
+    }
 }

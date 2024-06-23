@@ -12,24 +12,34 @@ class SongCreation(private val repository: SongRepository) {
     fun createSong(
         name: String,
         artist: String,
-        lyrics: String?
-    ): CreationResult {
-        val maybeSong = when (lyrics) {
-            null -> Song(name, artist)
-            else -> Song(name, artist, lyrics)
+        lyrics: String? = null
+    ): SongCreationResult = when (val songCreationResult = createSongObject(lyrics, name, artist)) {
+        is Created -> {
+            checkForDuplicatesAndStore(songCreationResult)
         }
 
-        return when (maybeSong) {
-            is Created -> {
-                repository.store(maybeSong.value)
-                de.kairenken.songs.application.song.Created(maybeSong.value)
-            }
-
-            is InvalidArguments -> de.kairenken.songs.application.song.InvalidArguments(maybeSong.errors)
-        }
+        is InvalidArguments -> InvalidSongArguments(songCreationResult.errors)
     }
+
+    private fun createSongObject(
+        lyrics: String?,
+        name: String,
+        artist: String
+    ) = when (lyrics) {
+        null -> Song(name, artist)
+        else -> Song(name, artist, lyrics)
+    }
+
+    private fun checkForDuplicatesAndStore(songCreationResult: Created<Song>) =
+        if (!repository.exists(songCreationResult.value.name, songCreationResult.value.artist)) {
+            repository.store(songCreationResult.value)
+            SongCreated(songCreationResult.value)
+        } else {
+            SongAlreadyExists
+        }
 }
 
-sealed class CreationResult
-class Created(val song: Song) : CreationResult()
-class InvalidArguments(val errors: List<String>) : CreationResult()
+sealed class SongCreationResult
+class SongCreated(val song: Song) : SongCreationResult()
+class InvalidSongArguments(val errors: List<String>) : SongCreationResult()
+data object SongAlreadyExists : SongCreationResult()

@@ -33,6 +33,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.9.1")
+    testImplementation("io.mockk:mockk:1.13.11")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

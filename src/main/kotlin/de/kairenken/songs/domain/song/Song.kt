@@ -12,19 +12,19 @@ import java.util.UUID
 private const val MAX_LENGTH = 500
 private const val MAX_LYRICS_LENGTH = 20000
 
-class Song(
+data class Song(
     val id: Id,
     val name: Name,
     val artist: Artist,
     val lyrics: Lyrics
 ) {
-    class Id private constructor(val value: UUID) {
+    data class Id private constructor(val value: UUID) {
         companion object {
             operator fun invoke(value: UUID = UUID.randomUUID()): CreationResult<Id> = Created(Id(value))
         }
     }
 
-    class Name private constructor(val value: String) {
+    data class Name private constructor(val value: String) {
         companion object {
             operator fun invoke(value: String): CreationResult<Name> = when (val result = validate {
                 require(value.isNotBlank(), "Song.Name must not be blank")
@@ -36,7 +36,7 @@ class Song(
         }
     }
 
-    class Artist private constructor(val value: String) {
+    data class Artist private constructor(val value: String) {
         companion object {
             operator fun invoke(value: String): CreationResult<Artist> = when (val result = validate {
                 require(value.isNotBlank(), "Song.Artist must not be blank")
@@ -48,7 +48,7 @@ class Song(
         }
     }
 
-    class Lyrics private constructor(val value: String) {
+    data class Lyrics private constructor(val value: String) {
         companion object {
             operator fun invoke(value: String = ""): CreationResult<Lyrics> = when (val result = validate {
                 require(
