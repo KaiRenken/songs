@@ -3,7 +3,6 @@ package de.kairenken.songs.domain.common
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
-
 fun <T : Any> create(arguments: List<CreationResult<Any>>, clazz: KClass<T>): CreationResult<T> {
     val errors = mutableListOf<String>()
 

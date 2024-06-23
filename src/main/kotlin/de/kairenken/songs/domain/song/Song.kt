@@ -3,9 +3,6 @@ package de.kairenken.songs.domain.song
 import de.kairenken.songs.domain.common.Created
 import de.kairenken.songs.domain.common.CreationResult
 import de.kairenken.songs.domain.common.InvalidArguments
-import de.kairenken.songs.domain.common.Validator.Companion.validate
-import de.kairenken.songs.domain.common.Validator.Error
-import de.kairenken.songs.domain.common.Validator.Success
 import de.kairenken.songs.domain.common.create
 import java.util.UUID
 
@@ -26,38 +23,29 @@ data class Song(
 
     data class Name private constructor(val value: String) {
         companion object {
-            operator fun invoke(value: String): CreationResult<Name> = when (val result = validate {
-                require(value.isNotBlank(), "Song.Name must not be blank")
-                require(value.length <= MAX_LENGTH, "Song.Name must not be longer than $MAX_LENGTH characters")
-            }) {
-                is Success -> Created(Name(value))
-                is Error -> InvalidArguments(result.errors)
+            operator fun invoke(value: String): CreationResult<Name> {
+                if (value.isBlank()) return InvalidArguments(listOf("Song.Name must not be blank"))
+                if (value.length >= MAX_LENGTH) return InvalidArguments(listOf("Song.Name must not be longer than $MAX_LENGTH characters"))
+                return Created(Name(value))
             }
         }
     }
 
     data class Artist private constructor(val value: String) {
         companion object {
-            operator fun invoke(value: String): CreationResult<Artist> = when (val result = validate {
-                require(value.isNotBlank(), "Song.Artist must not be blank")
-                require(value.length <= MAX_LENGTH, "Song.Artist must not be longer than $MAX_LENGTH characters")
-            }) {
-                is Success -> Created(Artist(value))
-                is Error -> InvalidArguments(result.errors)
+            operator fun invoke(value: String): CreationResult<Artist> {
+                if (value.isBlank()) return InvalidArguments(listOf("Song.Artist must not be blank"))
+                if (value.length >= MAX_LENGTH) return InvalidArguments(listOf("Song.Artist must not be longer than $MAX_LENGTH characters"))
+                return Created(Artist(value))
             }
         }
     }
 
     data class Lyrics private constructor(val value: String) {
         companion object {
-            operator fun invoke(value: String = ""): CreationResult<Lyrics> = when (val result = validate {
-                require(
-                    value.length <= MAX_LYRICS_LENGTH,
-                    "Song.Lyrics must not be longer than $MAX_LYRICS_LENGTH characters"
-                )
-            }) {
-                is Success -> Created(Lyrics(value))
-                is Error -> InvalidArguments(result.errors)
+            operator fun invoke(value: String = ""): CreationResult<Lyrics> {
+                if (value.length >= MAX_LYRICS_LENGTH) return InvalidArguments(listOf("Song.Lyrics must not be longer than $MAX_LYRICS_LENGTH characters"))
+                return Created(Lyrics(value))
             }
         }
     }
