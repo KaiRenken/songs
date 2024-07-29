@@ -3,7 +3,10 @@ package de.kairenken.songs.domain.common
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
-fun <T : Any> create(arguments: List<CreationResult<Any>>, clazz: KClass<T>): CreationResult<T> {
+/**
+ *
+ */
+fun <T : Any> create(arguments: List<CreationResult<Any>>, classToInstantiate: KClass<T>): CreationResult<T> {
     val errors = mutableListOf<String>()
 
     arguments.forEach {
@@ -14,7 +17,7 @@ fun <T : Any> create(arguments: List<CreationResult<Any>>, clazz: KClass<T>): Cr
     }
 
     return if (errors.isEmpty()) {
-        Created(clazz.primaryConstructor!!.call(*(arguments.map { (it as Created).value }.toTypedArray())))
+        Created(classToInstantiate.primaryConstructor!!.call(*(arguments.map { (it as Created).value }.toTypedArray())))
     } else {
         InvalidArguments(errors)
     }
