@@ -1,6 +1,6 @@
 package de.kairenken.songs.application.song
 
-import de.kairenken.songs.domain.common.CreateUseCaseDsl.Companion.createUseCase
+import de.kairenken.songs.domain.common.CreateDsl
 import de.kairenken.songs.domain.song.Song
 import de.kairenken.songs.domain.song.SongRepository
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ class SongCreation(private val repository: SongRepository) {
         name: String,
         artist: String,
         lyrics: String? = null
-    ) = createUseCase(SongCreated::class, InvalidSongArguments::class) {
+    ) = CreateDsl(Song::class, SongCreationResult::class, SongCreated::class, InvalidSongArguments::class) {
         create(
             when (lyrics) {
                 null -> Song(name, artist)
