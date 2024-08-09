@@ -15,8 +15,8 @@ class SongCreation(private val repository: SongRepository) {
     ) = CreateDsl(Song::class, SongCreationResult::class, SongCreated::class, InvalidSongArguments::class) {
         create(
             when (lyrics) {
-                null -> Song(name, artist)
-                else -> Song(name, artist, lyrics)
+                null -> Song(Song.Name(name), Song.Artist(artist))
+                else -> Song(Song.Name(name), Song.Artist(artist), Song.Lyrics(lyrics))
             }
         )
 

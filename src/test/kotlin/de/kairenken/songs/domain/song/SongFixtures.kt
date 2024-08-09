@@ -8,9 +8,9 @@ val songNameFixture = (Song.Name("test-song-name") as Created).value
 val songArtistFixture = (Song.Artist("test-song-artist") as Created).value
 val songLyricsFixture = (Song.Lyrics("test-song-lyrics") as Created).value
 
-val songFixture = Song(
-    songIdFixture,
-    songNameFixture,
-    songArtistFixture,
-    songLyricsFixture
-)
+val songFixture = (Song(
+    Song.Id(songIdFixture.value),
+    Song.Name(songNameFixture.value),
+    Song.Artist(songArtistFixture.value),
+    Song.Lyrics(songLyricsFixture.value)
+) as Created).value

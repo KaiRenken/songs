@@ -55,18 +55,18 @@ data class Song(
 
     companion object {
         operator fun invoke(
-            name: String,
-            artist: String,
-            lyrics: String = ""
+            name: CreationResult<Name>,
+            artist: CreationResult<Artist>,
+            lyrics: CreationResult<Lyrics> = Lyrics() as Created
         ): CreationResult<Song> =
-            create(listOf(Id(), Name(name), Artist(artist), Lyrics(lyrics)), Song::class)
+            create(arguments = listOf(Id(), name, artist, lyrics), classToInstantiate = Song::class)
 
         operator fun invoke(
-            id: UUID,
-            name: String,
-            artist: String,
-            lyrics: String
+            id: CreationResult<Id>,
+            name: CreationResult<Name>,
+            artist: CreationResult<Artist>,
+            lyrics: CreationResult<Lyrics>
         ): CreationResult<Song> =
-            create(listOf(Id(id), Name(name), Artist(artist), Lyrics(lyrics)), Song::class)
+            create(arguments = listOf(id, name, artist, lyrics), classToInstantiate = Song::class)
     }
 }
