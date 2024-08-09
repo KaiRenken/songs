@@ -1,0 +1,81 @@
+### create new song with lyrics successfully
+POST {{host}}/api/song/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "test-name-1",
+  "artist": "test-artist-1",
+  "lyrics": "test-lyrics-1"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201)
+        client.assert(response.body.name === "test-name-1")
+        client.assert(response.body.artist === "test-artist-1")
+        client.assert(response.body.lyrics === "test-lyrics-1")
+    });
+
+    client.global.set("song-id-1", response.body.id)
+%}
+
+### create new song without lyrics successfully
+POST {{host}}/api/song/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "test-name-2",
+  "artist": "test-artist-1"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201)
+        client.assert(response.body.name === "test-name-2")
+        client.assert(response.body.artist === "test-artist-1")
+        client.assert(response.body.lyrics === "")
+    });
+
+    client.global.set("song-id-2", response.body.id)
+%}
+
+### create duplicated song
+POST {{host}}/api/song/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "test-name-2",
+  "artist": "test-artist-1",
+  "lyrics": "test-lyrics-2"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 400)
+        client.assert(response.body.messages.length === 1)
+        client.assert(response.body.messages[0] === "This song already exists")
+    });
+%}
+
+### create song with invalid arguments
+POST {{host}}/api/song/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "",
+  "artist": "",
+  "lyrics": ""
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 400)
+        client.assert(response.body.messages.length === 2)
+        client.assert(response.body.messages[0] === "Song.Name must not be blank")
+        client.assert(response.body.messages[1] === "Song.Artist must not be blank")
+    });
+%}

@@ -21,7 +21,7 @@ class SongCreation(private val repository: SongRepository) {
         )
 
         checkAfterCreation(SongAlreadyExists) {
-            repository.exists((it as Song).name, (it as Song).artist)
+            repository.exists(it.name, it.artist)
         }
 
         doFinally { repository.store(it) }

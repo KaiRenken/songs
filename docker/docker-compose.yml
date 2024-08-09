@@ -1,0 +1,18 @@
+version: '3'
+
+volumes:
+  songs_postgres_data:
+    driver: local
+
+services:
+  postgres:
+    container_name: songs-postgres_container
+    image: postgres:16.3-alpine
+    volumes:
+      - songs_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: development_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
